@@ -1,0 +1,145 @@
+#define CRT_SECURE_NO_WARNING
+#include <iostream>
+#include< string>
+#include<fstream>
+
+using namespace std;
+
+class Asigurare {
+	int idAsigurare;
+	char* nume;
+	float suma;
+	string tipAsigurare;
+	static int durataAsigurare;
+
+public:
+
+	int getIdAsigurare() {
+		return this->idAsigurare;
+	}
+	char* getNume() {
+		return this->nume;
+	}
+	float getSuma() {
+		return this->suma;
+	}
+	string getTipAsigurare() {
+		return this->tipAsigurare;
+	}
+	void setIdAsigurare(int idAsigurare) {
+		this->idAsigurare = idAsigurare;
+	}
+	void setNume(char* nume) {
+		this->nume = new char[strlen(nume) + 1];
+		strcpy_s(this->nume,strlen(nume)+1, nume);
+	}
+
+	void setSuma(float suma) {
+		this->suma = suma;
+	}
+
+	void setTipAsigurare(string tipAsigurare) {
+		this->tipAsigurare = tipAsigurare;
+	}
+
+
+	Asigurare() {
+		this->idAsigurare = 0;
+		this->nume = new char[strlen("ANONIM") + 1];
+		strcpy_s(this->nume,strlen("ANONIM")+1, "ANONIM");
+		this->suma = 0;
+		this->tipAsigurare = "NECUNOSCUTA";
+	}
+
+	Asigurare(int idAsigurare, const char* nume, float suma, string tipAsigurare) {
+		this->idAsigurare = idAsigurare;
+		this->nume = new char[strlen(nume) + 1];
+		strcpy_s(this->nume, strlen(nume) + 1, nume);
+		this->suma = suma;
+		this->tipAsigurare = tipAsigurare;
+	}
+	~Asigurare() {
+		if (this->nume != nullptr) {
+			delete[]this->nume;
+		}
+	}
+
+	friend ostream& operator<<(ostream& out, const Asigurare& a) {
+		out << "Id Asigurare: " << a.idAsigurare<<endl;
+		out << "Nume: " << a.nume << endl;
+		out << "Suma: " << a.suma << endl;
+		out << "Tip Asigurare: " << a.tipAsigurare << endl;
+		return out;
+	}
+
+	float operator()(float valuta) {
+		return this->suma * valuta;
+		
+	}
+
+	double conversie() {
+		return (double)this->suma;
+	}
+
+	Asigurare(const Asigurare& a) {
+		this->idAsigurare = a.idAsigurare;
+		this->nume = new char[strlen(a.nume) + 1];
+		strcpy_s(this->nume, strlen(a.nume) + 1, a.nume);
+		this->suma = a.suma;
+		this->tipAsigurare = a.tipAsigurare;
+	}
+
+	Asigurare& operator=(const Asigurare& a) {
+		if (this != &a) {
+			if (this->nume != nullptr) {
+				delete[]this->nume;
+			}
+			this->idAsigurare = a.idAsigurare;
+			this->nume = new char[strlen(a.nume) + 1];
+			strcpy_s(this->nume, strlen(a.nume) + 1, a.nume);
+			this->suma = a.suma;
+			this->tipAsigurare = a.tipAsigurare;
+		}
+		return *this;
+	}
+
+
+	//scriere in fisier binar (serializare)
+
+	void serializare(string numeFisier) {
+		ofstream f(numeFisier, ios::out | ios::binary);
+		//pt char*
+		int dimensiuneNume = strlen(this->nume);
+		f.write((char*)&dimensiuneNume, sizeof(dimensiuneNume));
+		f.write(this->nume, dimensiuneNume+1);
+
+	}
+
+
+};
+
+int Asigurare::durataAsigurare = 2;
+
+int main()
+{
+	Asigurare a1;
+	cout << a1 << endl;
+
+	Asigurare a2(1, "ION", 30, "Sanatate");
+	cout << a2 << endl;
+
+	Asigurare a3(a1);
+	cout << a3 << endl;
+
+	a3 = a2;
+	cout << a3 << endl;
+
+	cout<<a3(20)<<endl;
+
+	double suma = a2.conversie();
+	cout << suma;
+
+
+	return 0;
+}
+
