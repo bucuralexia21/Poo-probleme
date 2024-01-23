@@ -1,0 +1,130 @@
+#include <iostream>
+#include<string>
+#include<fstream>
+using namespace std;
+
+class Catering{
+	string client;
+	int nrProduse;
+	string* produse;
+	float pretTotal;
+	static int CUIcatering;
+
+public:
+
+	string getClient() {
+		return this->client;
+	}
+	int getNrProduse() {
+		return this->nrProduse;
+	}
+	string* getProduse() {
+		return this->produse;
+	}
+	float getPret() {
+		return this->pretTotal;
+	}
+
+	
+	void setClient(string client) {
+		this->client = client;
+	}
+	void setComanda(int nrProduse, string* produse)
+	{
+		this->nrProduse = nrProduse;
+		this->produse = new string[this->nrProduse];
+		for (int i = 0; i < this->nrProduse; i++) {
+			this->produse = produse;
+		}
+	}
+	void setPret(float pretTotal) {
+		this->pretTotal = pretTotal;
+	}
+
+	Catering() {
+		this->client = "ANONIM";
+		this->nrProduse = 0;
+		this->produse = nullptr;
+		this->pretTotal = 0;
+	}
+
+	Catering(string client, int nrProduse, string* produse, float pretTotal) {
+		this->client = client;
+		this->nrProduse = nrProduse;
+		this->produse = new string[this->nrProduse];
+		for (int i = 0; i < this->nrProduse; i++) {
+			this->produse[i] = produse[i];
+		}
+		this->pretTotal = pretTotal;
+	}
+
+	~Catering() {
+		if (this->produse != nullptr) {
+			delete[]this->produse;
+		}
+	}
+
+	friend ostream& operator<<(ostream& out, const Catering& c) {
+		out << "Client: " << c.client << endl;
+		out << "Numar produse: " << c.nrProduse << endl;
+		out << "Produse: ";
+		for (int i = 0; i < c.nrProduse; i++) {
+			out << c.produse[i]<<" ";
+		}
+		out << endl;
+		out << " Pret total: " << c.pretTotal;
+		return out;
+	}
+
+	string operator[](int poz) {
+		if (poz >= 0 && poz < this->nrProduse) {
+			return this->produse[poz];
+		}
+		else { return "Nu exista aceasta pozitie in vector"; }
+	}
+
+	
+	Catering& operator+=(const string& produsNou) {
+		for (int i = 0; i < this->nrProduse; i++) {
+			if (this->produse[i] == produsNou) {
+
+				this->produse = new string[this->nrProduse + 1];
+				this->nrProduse++;
+				cout << "Produsul " << produsNou << " exista deja in vector" << endl;
+				
+				return *this;
+			}
+			}
+		
+			string* aux = this->produse;
+			this->produse = new string[this->nrProduse + 1];
+			for (int i = 0; i < this->nrProduse; i++) {
+				this->produse[i] = aux[i];
+			}
+			this->produse[this->nrProduse] = produsNou;
+			this->nrProduse++;
+			delete[]aux;
+			return *this;
+	}
+
+	
+};
+
+int Catering::CUIcatering = 342;
+
+int main()
+{
+	Catering c1;
+	cout << c1 << endl;
+	
+	string produse1[] = {"apa", "lapte"};
+	Catering c2("Andrei", 2, produse1, 2000);
+	cout << c2<<endl;
+
+	cout << c2[1] << endl<<endl;
+
+	c2 += "lapte";
+	cout << c2;
+
+	return 0;
+}
