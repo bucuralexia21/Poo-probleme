@@ -1,0 +1,186 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Produs{
+	const int idMagazin;
+	int cod;
+	char* denumire;
+	float gramaj;
+	bool areAlergeni;
+	static int pretMinim;
+	
+public:
+
+	const int getIdMagazin() {
+		return this->idMagazin;
+	}
+	int getCod() {
+		return this->cod;
+	}
+	char* getDenumire() {
+		return this->denumire;
+	}
+	float getGramaj() {
+		return this->gramaj;
+	}
+	bool getAreAlergeni() {
+		return this->areAlergeni;
+	}
+
+	void setCod(int cod) {
+		this->cod = cod;
+	}
+	void setDenumire(char* denumire) {
+		this->denumire = new char[strlen(denumire) + 1];
+		strcpy_s(this->denumire, strlen(denumire) + 1, denumire);
+	}
+	void setGramaj(float gramaj) {
+		this->gramaj = gramaj;
+	}
+	void setAreAlergeni(bool areAlergeni) {
+		this->areAlergeni = areAlergeni;
+	}
+
+	Produs():idMagazin() {
+		this->cod = 0;
+		this->denumire = new char[strlen("NECUNOSCUT") + 1];
+		strcpy_s(this->denumire, strlen("NECUNOSCUT")+1, "NECUNOSCUT");
+		this->gramaj = 0;
+		this->areAlergeni = 0;
+	}
+	Produs(int cod, const char* denumire, float gramaj, bool areAlergeni) :idMagazin(21) {
+		this->cod = cod;
+		this->denumire = new char[strlen(denumire) + 1];
+		strcpy_s(this->denumire, strlen(denumire) + 1, denumire);
+		this->gramaj = gramaj;
+		this->areAlergeni = areAlergeni;
+	}
+
+	Produs (const Produs& p):idMagazin(p.idMagazin) {
+		this->cod = p.cod;
+		this->denumire = new char[strlen(p.denumire) + 1];
+		strcpy_s(this->denumire, strlen(p.denumire) + 1, p.denumire);
+		this->gramaj = p.gramaj;
+		this->areAlergeni = p.areAlergeni;
+	}
+	~Produs() {
+		if (this->denumire != nullptr) {
+			delete[]this->denumire;
+		}
+	}
+
+	friend ostream& operator<<(ostream& out, const Produs& p) {
+		out << "Cod: " << p.cod << endl;
+		out << "Denumire: " << p.denumire << endl;
+		out << "Gramaj: " << p.gramaj << endl;
+		out << "Are alergeni: " << p.areAlergeni << endl;
+		return out;
+	}
+
+	Produs& operator=(const Produs& p)
+	{
+		if (this != &p) {
+			if (this->denumire != nullptr) {
+				delete[]this->denumire;
+			}
+			this->cod = p.cod;
+			this->denumire = new char[strlen(p.denumire) + 1];
+			strcpy_s(this->denumire, strlen(p.denumire) + 1, p.denumire);
+			this->gramaj = p.gramaj;
+			this->areAlergeni = p.areAlergeni;
+
+		}
+		return *this;
+	}
+
+
+	
+};
+	
+int Produs::pretMinim = 5;
+
+class Cos {
+	Produs* produs;
+	int nrProduse;
+	float pretProduse;
+
+public:
+	Cos() {
+		this->nrProduse = 0;
+		this->produs = nullptr;
+		this->pretProduse = 0;
+	}
+
+	Cos(Produs* produs, int nrProduse, float pretProduse) {
+		this->nrProduse = nrProduse;
+		this->produs = new Produs[this->nrProduse];
+		for (int i = 0; i < this->nrProduse; i++) {
+			this->produs[i] = produs[i];
+		}
+		this->pretProduse = pretProduse;
+	}
+
+	Cos(const Cos& c) {
+		this->nrProduse = c.nrProduse;
+		this->produs = new Produs[this->nrProduse];
+		for (int i = 0; i < this->nrProduse; i++) {
+			this->produs[i] = c.produs[i];
+		}
+		this->pretProduse = c.pretProduse;
+	}
+
+	~Cos() {
+		if (this->produs != nullptr) {
+			delete[]this->produs;
+		}
+
+	}
+	friend ostream& operator<<(ostream& out, const Cos& c) {
+		out << "Numar produse: " << c.nrProduse << endl;
+		out << "Produse: " << endl;
+		for (int i = 0; i < c.nrProduse; i++) {
+			out << c.produs[i] << endl;
+		}
+		out << "Pret total: " << c.pretProduse << endl;
+		return out;
+		
+	}
+	
+
+	Cos& operator[](string denumire) {
+		for (int i = 0; i < this->nrProduse; i++) {
+			if (this->produs->getDenumire()[i]==denumire)
+			{
+				return
+			}
+		}
+	}
+};
+
+int main()
+{
+	Produs p1;
+	cout << p1<<endl;
+
+	Produs p2(1,"apa",2,0);
+	cout << p2 << endl;
+
+	Produs p3(p1);
+	cout << p3 << endl;
+
+	p3 = p2;
+	cout << p3<<endl;
+
+
+	Cos c1;
+	cout << c1 << endl;
+
+	Produs* vectProduse1 = new Produs[2];
+	vectProduse1[0] = p1;
+	vectProduse1[1] = p2;
+	Cos c2(vectProduse1, 2, 40);
+	cout << c2;
+
+	return 0;
+}
