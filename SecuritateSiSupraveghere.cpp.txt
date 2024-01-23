@@ -1,0 +1,130 @@
+#include <iostream>
+#include<string>
+#include<fstream>
+
+using namespace std;
+
+class Sistem {
+	int nrCamere;
+	string* localizareCamere;
+	char* dateSpecifice;
+	float durata;
+	bool stareCamera;
+	static int modelCamera;
+
+public:
+	int getNrCamere() {
+		return this->nrCamere;
+	}
+	string* getLocalizareCamere() {
+		return this->localizareCamere;
+	}
+	char* getDateSpecifice() {
+		return this->dateSpecifice;
+	}
+	float getDurata() {
+		return this->durata;
+	}
+	bool getStareCamera() {
+		return this->stareCamera;
+	}
+	void setCamere(int nrCamere, string* localizareCamere) {
+		this->nrCamere = nrCamere;
+		for (int i = 0; i < this->nrCamere; i++) {
+			this->localizareCamere[i] = localizareCamere[i];
+		}
+	}
+	void setDateSpecifice(char* dateSpecifice) {
+		this->dateSpecifice = new char[strlen(dateSpecifice) + 1];
+		strcpy_s(this->dateSpecifice,strlen(dateSpecifice)+1, dateSpecifice);
+	}
+	void setDurata(float durata) {
+		this->durata = durata;
+	}
+	void setStareCamera(bool stareCamera) {
+		this->stareCamera = stareCamera;
+	}
+	
+	Sistem() {
+		this->nrCamere = 0;
+		this->localizareCamere = nullptr;
+		this->dateSpecifice = new char[strlen("NECUNOSCUTE") + 1];
+		strcpy_s(this->dateSpecifice,strlen("NECUNOSCUTE")+1, "NECUNOSCUTE");
+		this->durata = 0;
+		this->stareCamera = 0;
+
+	}
+
+	Sistem(int nrCamere, const char* dateSpecifice, float durata, bool stareCamera, string* localizareCamere) {
+		this->nrCamere = nrCamere;
+		this->localizareCamere = new string[nrCamere];
+		for (int i = 0; i < this->nrCamere; i++) {
+			this->localizareCamere[i] = localizareCamere[i];
+		}
+		this->dateSpecifice = new char[strlen(dateSpecifice) + 1];
+		strcpy_s(this->dateSpecifice,strlen(dateSpecifice )+1,dateSpecifice);
+		this->durata = durata;
+		this->stareCamera = stareCamera;
+
+	}
+	~Sistem() {
+		if (this->dateSpecifice != nullptr) {
+			delete[]this->dateSpecifice;
+		}
+		if(this->localizareCamere != nullptr) {
+			delete[]this->localizareCamere;
+		}
+	}
+
+	friend ostream& operator<<(ostream& out, const Sistem& s) {
+		out << "Numar camere: " << s.nrCamere<<endl;
+		for (int i = 0; i < s.nrCamere; i++) {
+			out << "Localizare: " << s.localizareCamere[i] << endl;
+		}
+		out << "Date specifice: " << s.dateSpecifice << endl;
+		out << "Durata: " << s.durata << endl;
+		out << "Stare camera: " << s.stareCamera << endl;
+		return out;
+	}
+
+	string operator[](int poz) {
+		if (poz >= 0 && poz <= this->nrCamere) {
+			return this->localizareCamere[poz];
+		}
+		else return "Pozitia introdusa nu exista !";
+	}
+
+	Sistem& operator+=(const string& cameraNoua) {
+		string* aux = this->localizareCamere;
+		this->localizareCamere = new string[this->nrCamere + 1];
+		for (int i = 0; i < this->nrCamere; i++) {
+			this->localizareCamere[i] = aux[i];
+		}
+		this->localizareCamere[this->nrCamere] = cameraNoua;
+		this->nrCamere++;
+		delete[]aux;
+		return *this;
+	}
+
+};
+int Sistem::modelCamera = 3000;
+
+int main()
+{
+	Sistem s1;
+	cout <<"SISTEMUL 1: "<<endl<< s1 << endl;
+
+	string localizareCamere1[] = { "Hol","Bucatarie","Sufragerie" };
+	Sistem s2(3, "Camere cu vedere de noapte ", 30, 1, localizareCamere1);
+	
+	cout << "SISTEM 2: " << endl << s2 << endl;
+
+	int pozitie = 2;
+	cout << "Localizare camera la pozitia " << pozitie << ": " << s2[pozitie] << endl;
+
+	string cameraNoua = "Curte";
+	s2 += cameraNoua;
+	cout << "Sistem 2 dupa adaugare camera: " << endl << s2 << endl;
+
+	return 0;
+}
