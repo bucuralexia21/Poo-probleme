@@ -1,4 +1,4 @@
-﻿// PowerBankExamen.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// PowerBankExamen.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 //SUBIECT
 //(3p) Se consideră o aplicate pentru gestionarea activității unei magazin care vinde baterii externe de
@@ -103,14 +103,14 @@ public:
 	}
 
 	friend ofstream& operator<<(ofstream& out, const PowerBank& p) {
-		out  << p.capacitate << endl;
-		out  << p.greutate << endl;
-		out  << p.culoare << endl;
+		out << p.capacitate << endl;
+		out << p.greutate << endl;
+		out << p.culoare << endl;
 		return out;
 	}
 
-	friend istream& operator>>(istream& in,  PowerBank& p) {
-		cout<< "Introduceti capacitate: ";
+	friend istream& operator>>(istream& in, PowerBank& p) {
+		cout << "Introduceti capacitate: ";
 		in >> p.capacitate;
 		cout << "Introduceti Greutate: ";
 		in >> p.greutate;
@@ -141,8 +141,15 @@ public:
 
 	PowerBank& operator*=(int valoare) {
 		this->capacitate *= valoare;
-		return* this;
+		return*this;
 	}
+
+	bool operator<(const PowerBank& other) const {
+		return this->capacitate < other.capacitate;
+	}
+
+
+
 
 	virtual void Descriere()
 	{
@@ -167,7 +174,7 @@ public:
 		this->KwSoare = KwSoare;
 	}
 
-	SunPoweredPowerBank(const SunPoweredPowerBank& p):PowerBank(p)
+	SunPoweredPowerBank(const SunPoweredPowerBank& p) :PowerBank(p)
 	{
 		this->KwSoare = p.KwSoare;
 	}
@@ -179,10 +186,10 @@ public:
 	}
 
 
-	friend istream& operator>>(istream& in,  SunPoweredPowerBank& p) {
-		in>> (PowerBank&)p;
+	friend istream& operator>>(istream& in, SunPoweredPowerBank& p) {
+		in >> (PowerBank&)p;
 		cout << "Introduceti kWSoare: ";
-		in>>   p.KwSoare;
+		in >> p.KwSoare;
 		return in;
 	}
 
@@ -212,8 +219,8 @@ int main()
 	cout << p2.getCapacitate() << endl;
 
 
-	cout << "-------*=------------------"<<endl;
-	cout << "P2 are capacitatea " << p2.getCapacitate()<<endl;
+	cout << "-------*=------------------" << endl;
+	cout << "P2 are capacitatea " << p2.getCapacitate() << endl;
 	p2 *= 10;
 	cout << p2.getCapacitate() << endl;
 
@@ -235,6 +242,23 @@ int main()
 	{
 		cout << "Nu sunt egale" << endl;
 	}
+
+	cout << "--------Op<---------------" << endl;
+
+	PowerBank p5(5000, 250, "Red");
+	PowerBank p6(10000, 300, "Blue");
+
+
+
+	if (p5 < p6) {
+		cout << "p5<p6";
+
+	}
+	else
+	{
+		cout<<"p5>p6";
+	}
+
 	//ofstream
 	ofstream fout("PowerBank.txt", ios::out);
 	fout << p2;
